@@ -74,9 +74,6 @@ def addlist(request):
 
 
 
-
-
-
 def getaddpage(request):
     if 'username' in request.session:
         username = request.session['username']
@@ -101,7 +98,7 @@ def updatelist(request):
         username = request.session['username']
         machine_id = request.GET['machineid']
         machine = Machine.objects.get(id=machine_id)
-        return render(request,'form-elements.html',{'machine':machine,'username':username})
+        return render(request,'update.html',{'machine':machine,'username':username})
     elif request.method == 'POST':
         machine_id = request.POST['id']
         machine = Machine.objects.get(id=machine_id)
@@ -117,13 +114,13 @@ def updatelist(request):
         machine.save()
 
 
-
         return render(request,'table.html',{'machinelist':machinelist,'username':username})
 
 # @login_required()
 def dellist(request):
     machineid= request.GET['machineid']
     print(machineid)
+    print(Machine.objects.get(id=machineid).name)
     Machine.objects.get(id=machineid).delete()
     username=request.session['username']
     user = User.objects.get(username=username)

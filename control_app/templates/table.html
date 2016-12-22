@@ -363,6 +363,7 @@
                         </div>
                     </div>
                     <div class="panel-body" style="display: block;">
+                    <p id="test"></p>
                         <table id="machine_table"
                                class="table table-striped table-bordered bootstrap-datatable datatable">
                             <thead>
@@ -397,7 +398,7 @@
                                            href="/update/?machineid={{ machine.id }}">
                                             <i class="fa fa-edit "></i>
                                         </a>
-                                        <a class="btn btn-danger" id='delete_button'>
+                                        <a class="btn btn-danger btnDel" id='delete_button'>
                                             <i class="fa fa-trash-o "></i>
                                         </a>
                                     </td>
@@ -415,7 +416,7 @@
     $(document).ready(function () {
 
 
-        $("#delete_button").click(
+        $("#machine_table").on('click',".btnDel",
             function () {
                 $.ajax(
                     {
@@ -437,24 +438,29 @@
     })
 
     function reload_table(data) {
-
-
+{#                    var htmlstr = ""#}
+{#                    for (var i = 0; i < data.machinelist.length; i++) {#}
+{#                        htmlstr = htmlstr+"id:"+data.machinelist[i].id + "sn:"+data.machinelist[i].SN  +"name:"+ data.machinelist[i].name +"temp"+ data.machinelist[i].temperature +"time"+ data.machinelist[i].time +"warning:" +data.machinelist[i].warning + "state"+data.machinelist[i].state ;#}
+{##}
+{#                    }#}
+{#                    $("#test").html(htmlstr);#}
+{#                      ajax 要区分那个按钮  因为ID不同，不能用ID作为区分#}
         $("#machine_table").children("tbody").empty()
         var htmlstr = ""
         for (var i = 0; i < data.machinelist.length; i++) {
             htmlstr = htmlstr + "<tr>" +
                 "<td class='hidden'>" + data.machinelist[i].id + "</td>" +
-                "<td>" + data.machinelist[i].SN + "<td>" +
-                "<td>" + data.machinelist[i].name + "<td>" +
-                "<td>" + data.machinelist[i].temperature + "<td>" +
-                "<td>" + data.machinelist[i].time + "<td>" +
-                "<td>" + data.machinelist[i].warning + "<td>" +
-                "<td>" + data.machinelist[i].state + "<td>" +
+                "<td>" + data.machinelist[i].SN + "</td>" +
+                "<td>" + data.machinelist[i].name + "</td>" +
+                "<td>" + data.machinelist[i].temperature + "</td>" +
+                "<td>" + data.machinelist[i].time + "</td>" +
+                "<td>" + data.machinelist[i].warning + "</td>" +
+                "<td>" + data.machinelist[i].state + "</td>" +
                 "<td>" + "<a class='btn btn-success'id='detail_button' href='/detail/?machineid=" + data.machinelist[i].id + "' > <i class='fa fa-search-plus '></i> </a>" +
-                "<a class='btn btn-info' id='change_button' href='/add/?machineid=" + data.machinelist[i].id + "'> <i class='fa fa-edit'></i> </a>" +
-                "<a class='btn btn-danger' id='delete_button'> <i class='fa fa-trash-o '></i> </a>" +
-                "<td>" +
-                "<tr>"
+                "<a class='btn btn-info' id='change_button' href='/update/?machineid=" + data.machinelist[i].id + "'> <i class='fa fa-edit'></i> </a>" +
+                "<a class='btn btn-danger btnDel' id='delete_button'> <i class='fa fa-trash-o '></i> </a>" +
+                "</td>" +
+                "</tr>"
         }
         $("#machine_table").children("tbody").html(htmlstr);
     }
@@ -470,20 +476,19 @@
                         var htmlstr = ""
                         for(var i=0 ; i< data.machinelist.length; i++)
                         {
-                            htmlstr= htmlstr + "<tr>"+
-                                    "<td class='hidden'>" + data.machinelist[i].id + "</td>" +
-                                    "<td>"+data.machinelist[i].SN+"</td>"+
-                                    "<td>"+data.machinelist[i].name+"</td>"+
-                                    "<td>"+data.machinelist[i].temperature+"/<td>"+
-                                    "<td>"+data.machinelist[i].time+"</td>"+
-                                    "<td>"+data.machinelist[i].warning+"</td>"+
-                                    "<td>"+data.machinelist[i].state+"</td>"+
-                                    "<td>"+
-                                            "<a class='btn btn-success'id='detail_button' href='/detail/?machineid="+data.machinelist[i].id+"' > <i class='fa fa-search-plus '></i> </a>"+
-                                            "<a class='btn btn-info' id='change_button' href='/add/?machineid="+data.machinelist[i].id+"'> <i class='fa fa-edit'></i> </a>"+
-                                            "<a class='btn btn-danger' id='delete_button'> <i class='fa fa-trash-o '></i> </a>"+
-                                        "</td>"+
-                                    "</tr>";
+                            htmlstr = htmlstr + "<tr>" +
+                            "<td class='hidden'>" + data.machinelist[i].id + "</td>" +
+                            "<td>" + data.machinelist[i].SN + "</td>" +
+                            "<td>" + data.machinelist[i].name + "</td>" +
+                            "<td>" + data.machinelist[i].temperature + "</td>" +
+                            "<td>" + data.machinelist[i].time + "</td>" +
+                            "<td>" + data.machinelist[i].warning + "</td>" +
+                            "<td>" + data.machinelist[i].state + "</td>" +
+                            "<td>" + "<a class='btn btn-success'id='detail_button' href='/detail/?machineid=" + data.machinelist[i].id + "' > <i class='fa fa-search-plus '></i> </a>" +
+                            "<a class='btn btn-info' id='change_button' href='/update/?machineid=" + data.machinelist[i].id + "'> <i class='fa fa-edit'></i> </a>" +
+                            "<a class='btn btn-danger btnDel' id='delete_button'> <i class='fa fa-trash-o '></i> </a>" +
+                            "</td>" +
+                            "</tr>"
                         }
                         $("#machine_table").children("tbody").html(htmlstr);
                     },
