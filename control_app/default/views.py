@@ -130,7 +130,7 @@ def dellist(request):
     machinel = Machine.objects.filter(user=user)
     machinelist=[]
     for item in machinel:
-        temp = {'id':item.id,'SN':item.SN,'name':item.name,'temperature':item.temperature,'warning':item.warning,'state':item.state}
+        temp = {'id':item.id,'SN':item.SN,'name':item.name,'temperature':item.temperature,'time':item.time , 'warning':item.warning,'state':item.state}
         machinelist.append(temp)
 
     res={'success':"true","machinelist":machinelist}
@@ -170,7 +170,7 @@ def searchlist(request):
 
 
 
-    return  render(request,'table.html',{'personlist':personlist})
+    return  render(request,'table.html',locals())
 
 
 def my_login(request):
