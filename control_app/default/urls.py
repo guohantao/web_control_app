@@ -12,6 +12,7 @@ urlpatterns = [
      url(r'^update/$',views.updatelist),#更新设备信息
      url(r'^del/$',views.dellist),#删除设备
      url(r'^detail/$',views.detail),#设备详细
+     url(r'^openclose/$',views.openclose),#设备详细
      url(r'^addpage/$',views.getaddpage),  #打开查找页面
 
      # 以下函数未定义，你们自己在VIEW里写

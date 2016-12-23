@@ -401,6 +401,10 @@
                                         <a class="btn btn-danger btnDel" id='delete_button'>
                                             <i class="fa fa-trash-o "></i>
                                         </a>
+                                        </a>
+                                        <a class="btn btn-danger btnOC" id='OC_button'>
+                                            <i class="fa fa-power-off "></i>
+                                        </a>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -414,6 +418,27 @@
     </div>
 <script>
     $(document).ready(function () {
+
+
+         $("#machine_table").on('click',".btnOC",
+            function () {
+                $.ajax(
+                    {
+                        url: "/openclose/",
+                        type: "GET",
+                        data: {"machineid": $(this).parent("td").siblings("td.hidden").text()},
+                        dataType: "JSON",
+                        success: function (data) {
+                            reload_table(data);
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            alert("关闭失败");
+                        }
+                    }
+                )
+            })
+
+
 
 
         $("#machine_table").on('click',".btnDel",
@@ -433,8 +458,6 @@
                     }
                 )
             })
-
-
     })
 
     function reload_table(data) {
@@ -456,9 +479,11 @@
                 "<td>" + data.machinelist[i].time + "</td>" +
                 "<td>" + data.machinelist[i].warning + "</td>" +
                 "<td>" + data.machinelist[i].state + "</td>" +
-                "<td>" + "<a class='btn btn-success'id='detail_button' href='/detail/?machineid=" + data.machinelist[i].id + "' > <i class='fa fa-search-plus '></i> </a>" +
-                "<a class='btn btn-info' id='change_button' href='/update/?machineid=" + data.machinelist[i].id + "'> <i class='fa fa-edit'></i> </a>" +
-                "<a class='btn btn-danger btnDel' id='delete_button'> <i class='fa fa-trash-o '></i> </a>" +
+                "<td>" + "<a class='btn btn-success'id='detail_button' href='/detail/?machineid=" + data.machinelist[i].id + "'><i class='fa fa-search-plus '></i>"+
+                          "</a>" +
+                         "<a class='btn btn-info' id='change_button' href='/update/?machineid=" + data.machinelist[i].id + "'><i class='fa fa-edit'></i>+"+ "</a>" +
+                "<a class='btn btn-danger btnDel' id='delete_button'><i class='fa fa-trash-o '></i></a>" +
+                "<a class='btn btn-danger btnOC' id='OC_button'><i class='fa fa-power-off '></i></a>"+
                 "</td>" +
                 "</tr>"
         }
@@ -486,7 +511,8 @@
                             "<td>" + data.machinelist[i].state + "</td>" +
                             "<td>" + "<a class='btn btn-success'id='detail_button' href='/detail/?machineid=" + data.machinelist[i].id + "' > <i class='fa fa-search-plus '></i> </a>" +
                             "<a class='btn btn-info' id='change_button' href='/update/?machineid=" + data.machinelist[i].id + "'> <i class='fa fa-edit'></i> </a>" +
-                            "<a class='btn btn-danger btnDel' id='delete_button'> <i class='fa fa-trash-o '></i> </a>" +
+                            "<a class='btn btn-danger btnDel' id='delete_button'> <i class='fa fa-trash-o '></i> </a>"+
+                            "<a class='btn btn-danger btnOC' id='OC_button'> <i class='fa fa-power-off '></i> </a>"+
                             "</td>" +
                             "</tr>"
                         }

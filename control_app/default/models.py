@@ -24,16 +24,28 @@ class Machine(models.Model):
     SN = models.CharField(max_length=10,unique='true')
     name = models.CharField(max_length=10)
     temperature = models.CharField(max_length=10)
-    time = models.DateField(auto_now="true")
+    time = models.CharField(max_length=20)
     warning = models.CharField(max_length=10)
     state = models.CharField(max_length=10)
-    limit = models.CharField(max_length=10)
+    limit = models.CharField(max_length=10) #阈值
 
 
-#每个设备的log库
-class Machine_log(models.Model):
-    SN = models.ForeignKey(Machine)
+#每个设备的temperature_log库
+class Temperature_log(models.Model):
+    machine = models.ForeignKey(Machine)
     history_temperature = models.CharField(max_length=10) #温度
     temperature_change_time = models.CharField(max_length=20) #温度改变时间
-    history_warning = models.CharField(max_length=10)     #状态
-    warning_change_time = models.CharField(max_length=20)  #报警时间
+
+
+
+#每个设备的state_log库
+class State_log(models.Model):
+    machine = models.ForeignKey(Machine)
+    history_state = models.CharField(max_length=10)  # 状态记录
+    state_change_time = models.CharField(max_length=20)  # 状态变化记录生成时间
+
+#每个设备的warning_log库
+class Warning_log(models.Model):
+    machine = models.ForeignKey(Machine)
+    history_warning = models.CharField(max_length=10)  # 报警
+    warning_change_time = models.CharField(max_length=20)  # 报警时间

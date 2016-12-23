@@ -2,11 +2,13 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.http import HttpResponseRedirect
-from default.models import Personlist,Machine,User
+from default.models import Personlist,Machine,User,Temperature_log,Warning_log,State_log
 from django.contrib.auth import  authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 import logging
+import time
+
 
 # Create your views here.
 
@@ -51,30 +53,67 @@ def gettable(request):
     else:
         return render(request,'login.html')
 
+
+
+#----------------------------设备添加修改删除---------------------
 # @login_required()
+# 已改
 def addlist(request):
     if request.method == 'GET':
         return render(request,'form-elements.html')
     elif request.method == 'POST':
         username = request.session['username']
         user=User.objects.get(username=username)
+        li =request.POST['limit']
         sn = request.POST['SN']
         na= request.POST['name']
         tempera = request.POST['temperature']
-        time = request.POST['time']
+        #获取系统当前时间
+        Time = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
         state = request.POST['state']
         warning = request.POST['warning']
-        machine = Machine(user=user,SN=sn,name=na,temperature=tempera,time=time,state=state,warning=warning)
+        machine = Machine(user=user, SN=sn, name=na, temperature=tempera, time=Time, state=state, warning=warning,limit=li)
+        #检查是否有重名SN
+        item = Machine.objects.filter(SN=sn)
+        if len(item) != 0:
+            return render(request, 'form-elements.html', {'machine': machine, 'username': username,'result_information':"已存在该SN!!"})
+
         machine.save()
+        #创建该机器的LOG日志 !!!!!要先machine.save才能 创建log 要不然数据库会报错，因为machine没有储存进去
+        tempera_log = Temperature_log(machine=machine,history_temperature=tempera,history_state=state,history_warning=warning,temperature_change_time=Time,warning_change_time=Time,state_change_time=Time)
+        warning_log = Warning_log(machine=machine,history_warning=warning,warning_change_time=Time)
+        state_log = State_log(machine=machine,history_state=state,state_change_time=Time)
+        tempera_log.save()
+        warning_log.save()
+        state_log.save()
         machinelist = Machine.objects.filter(user=user)
         return render(request,'table.html',{'machinelist':machinelist,'username':username})
 
-def getaddpage(request):
-    if 'username' in request.session:
-        username = request.session['username']
-        return render(request, 'table.html', locals())
-    else:
-        return render(request, 'login.html')
+def openclose(request):
+    machineid = request.GET['machineid']
+    Machine.objects.get(id=machineid).state = "关闭"
+    username = request.session['username']
+    user = User.objects.get(username=username)
+    machinel = Machine.objects.filter(user=user)
+    machinelist = []
+    for item in machinel:
+        temp = {'id': item.id, 'SN': item.SN, 'name': item.name, 'temperature': item.temperature, 'time': item.time,
+                'warning': item.warning, 'state': item.state, 'limit': item.limit}
+        machinelist.append(temp)
+
+    res = {'success': "true", "machinelist": machinelist}
+    print(res)
+    return JsonResponse(res)
+
+
+
+# #无用
+# def getaddpage(request):
+#     if 'username' in request.session:
+#         username = request.session['username']
+#         return render(request, 'table.html', locals())
+#     else:
+#         return render(request, 'login.html')
 
 # def getlist(request):
 #    # personlist = Personlist.objects.all()
@@ -83,6 +122,7 @@ def getaddpage(request):
 
 
 # @login_required()
+#更新机器表 已改
 def updatelist(request):
     if request.method == 'GET':
         username = request.session['username']
@@ -94,16 +134,35 @@ def updatelist(request):
         machine = Machine.objects.get(id=machine_id)
         username = request.session['username']
         user = User.objects.get(username=username)
-        machinelist = Machine.objects.filter(user=user)
+
+
         machine.SN = request.POST['SN']
         machine.name = request.POST['name']
-        machine.temperature = request.POST['temperature']
-        # machine.time = request.POST['time']
+        machine.time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+        machine.limit = request.POST['limit']
+        #保存原来的值，作为比对是否更改
+        te = machine.temperature
+        st = machine.state
+        wr = machine.warning
         machine.state = request.POST['state']
         machine.warning = request.POST['warning']
+        machine.temperature = request.POST['temperature']
         machine.save()
 
+        if machine.temperature != te :
+            temperature_log = Temperature_log(machine=machine,history_temperature=te,temperature_change_time=machine.time)
+            temperature_log.save()
 
+        if machine.warning != wr :
+            warning_log = Warning_log(machine=machine,history_warning=wr,warning_change_time=machine.time)
+            warning_log.save()
+
+        if machine.state != st :
+            state_log = State_log(machine=machine,history_state=st,state_change_time=machine.time)
+            state_log.save()
+
+
+        machinelist = Machine.objects.filter(user=user)
         return render(request,'table.html',{'machinelist':machinelist,'username':username})
 
 
@@ -120,7 +179,7 @@ def dellist(request):
     machinel = Machine.objects.filter(user=user)
     machinelist=[]
     for item in machinel:
-        temp = {'id':item.id,'SN':item.SN,'name':item.name,'temperature':item.temperature,'time':item.time , 'warning':item.warning,'state':item.state}
+        temp = {'id':item.id,'SN':item.SN,'name':item.name,'temperature':item.temperature,'time':item.time , 'warning':item.warning,'state':item.state,'limit':item.limit}
         machinelist.append(temp)
 
     res={'success':"true","machinelist":machinelist}
@@ -135,17 +194,17 @@ def detail(request):
     return  render(request,'detail.html',{'machine':machine,'username':username})
 
 
-
-def searchlist(request):
-    if request.method == 'GET':
-        return render(request,'search.html')
-    elif request.method == 'POST':
-        na = request.POST['name']
-        per = Personlist.objects.filter(name=na)
-        return render(request,'showsearch.html',locals())
-    return  render(request,'table.html',locals())
-
-
+# #无用
+# def searchlist(request):
+#     if request.method == 'GET':
+#         return render(request,'search.html')
+#     elif request.method == 'POST':
+#         na = request.POST['name']
+#         per = Personlist.objects.filter(name=na)
+#         return render(request,'showsearch.html',locals())
+#     return  render(request,'table.html',locals())
+#
+#-------------------------------------用户注册登录管理--------------------------------
 def my_login(request):
     if request.method == 'GET':
         return render(request,'login.html',{"notice":" "})
