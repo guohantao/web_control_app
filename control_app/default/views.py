@@ -80,7 +80,7 @@ def addlist(request):
 
         machine.save()
         #创建该机器的LOG日志 !!!!!要先machine.save才能 创建log 要不然数据库会报错，因为machine没有储存进去
-        tempera_log = Temperature_log(machine=machine,history_temperature=tempera,history_state=state,history_warning=warning,temperature_change_time=Time,warning_change_time=Time,state_change_time=Time)
+        tempera_log = Temperature_log(machine=machine,history_temperature=tempera,temperature_change_time=Time)
         warning_log = Warning_log(machine=machine,history_warning=warning,warning_change_time=Time)
         state_log = State_log(machine=machine,history_state=state,state_change_time=Time)
         tempera_log.save()
@@ -150,15 +150,15 @@ def updatelist(request):
         machine.save()
 
         if machine.temperature != te :
-            temperature_log = Temperature_log(machine=machine,history_temperature=te,temperature_change_time=machine.time)
+            temperature_log = Temperature_log(machine=machine,history_temperature=machine.temperature,temperature_change_time=machine.time)
             temperature_log.save()
 
         if machine.warning != wr :
-            warning_log = Warning_log(machine=machine,history_warning=wr,warning_change_time=machine.time)
+            warning_log = Warning_log(machine=machine,history_warning=machine.warning,warning_change_time=machine.time)
             warning_log.save()
 
         if machine.state != st :
-            state_log = State_log(machine=machine,history_state=st,state_change_time=machine.time)
+            state_log = State_log(machine=machine,history_state=machine.state,state_change_time=machine.time)
             state_log.save()
 
 
@@ -174,6 +174,7 @@ def dellist(request):
     print(machineid)
     print(Machine.objects.get(id=machineid).name)
     Machine.objects.get(id=machineid).delete()
+    # Temperature_log.delete(machine= machine)
     username=request.session['username']
     user = User.objects.get(username=username)
     machinel = Machine.objects.filter(user=user)
