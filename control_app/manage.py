@@ -1,8 +1,14 @@
 #!/usr/bin/env python
 import os
 import sys
-
-if __name__ == "__main__":
+from default.email import send_email
+import subprocess
+#========================
+import time,threading
+from default.client import client_model
+#========================
+def start_django():
+    print("Go into the Django thread!")
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "control_app.settings")
     try:
         from django.core.management import execute_from_command_line
@@ -20,3 +26,16 @@ if __name__ == "__main__":
             )
         raise
     execute_from_command_line(sys.argv)
+
+if __name__ == "__main__":
+    #send_email("850165905@qq.com","1234")
+    #start_django()
+    clientM= threading.Thread(target=client_model, name='clientM')
+    djangoM = threading.Thread(target=start_django, name='djangoM')
+    clientM.start()
+    djangoM.start()
+
+    clientM.join()
+    djangoM.join()
+
+

@@ -145,3 +145,15 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 LOGIN_URL = '/login/'
+
+
+
+#===============================email_section
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.163.com'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = 'mrleonardyuan@163.com'
+EMAIL_HOST_PASSWORD = 'yyk9174110'
+DEFAULT_FROM_EMAIL = 'System<mrleonardyuan@163.com>'

@@ -24,6 +24,6 @@ class Machine(models.Model):
     SN = models.CharField(max_length=10,unique='true')
     name = models.CharField(max_length=10)
     temperature = models.CharField(max_length=10)
-    time = models.DateTimeField(auto_now="true")
+    time = models.CharField(max_length=10)
     warning = models.CharField(max_length=10)
     state = models.CharField(max_length=10)

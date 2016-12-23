@@ -4,6 +4,7 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
+
      url(r'^$',views.getindex),  #主页面
      url(r'^table/$',views.gettable),  #设备管理页面
      url(r'^register/$',views.register),#注册账号

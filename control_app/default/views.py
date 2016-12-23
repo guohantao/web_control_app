@@ -51,7 +51,6 @@ def gettable(request):
     else:
         return render(request,'login.html')
 
-
 # @login_required()
 def addlist(request):
     if request.method == 'GET':
@@ -62,17 +61,13 @@ def addlist(request):
         sn = request.POST['SN']
         na= request.POST['name']
         tempera = request.POST['temperature']
-        # time = request.POST['time']
+        time = request.POST['time']
         state = request.POST['state']
         warning = request.POST['warning']
-        machine = Machine
-        machine = Machine(user=user,SN=sn,name=na,temperature=tempera,state=state,warning=warning)
+        machine = Machine(user=user,SN=sn,name=na,temperature=tempera,time=time,state=state,warning=warning)
         machine.save()
         machinelist = Machine.objects.filter(user=user)
         return render(request,'table.html',{'machinelist':machinelist,'username':username})
-
-
-
 
 def getaddpage(request):
     if 'username' in request.session:
@@ -80,11 +75,6 @@ def getaddpage(request):
         return render(request, 'table.html', locals())
     else:
         return render(request, 'login.html')
-
-
-
-
-
 
 # def getlist(request):
 #    # personlist = Personlist.objects.all()
@@ -116,6 +106,9 @@ def updatelist(request):
 
         return render(request,'table.html',{'machinelist':machinelist,'username':username})
 
+
+
+
 # @login_required()
 def dellist(request):
     machineid= request.GET['machineid']
@@ -134,20 +127,12 @@ def dellist(request):
     print(res)
     return  JsonResponse(res)
 
+# 显示该设备详情
 def detail(request):
     machineid = request.GET['machineid']
     machine = Machine.objects.get(id=machineid)
     username = request.session['username']
     return  render(request,'detail.html',{'machine':machine,'username':username})
-
-
-
-
-
-
-
-
-
 
 
 
@@ -158,21 +143,13 @@ def searchlist(request):
         na = request.POST['name']
         per = Personlist.objects.filter(name=na)
         return render(request,'showsearch.html',locals())
-
-
-
-
-
-
-
-
-
     return  render(request,'table.html',locals())
 
 
 def my_login(request):
     if request.method == 'GET':
-        return render(request,'login.html')
+        return render(request,'login.html',{"notice":" "})
+
     elif request.method == 'POST':
         username= request.POST['username']
         password= request.POST['password']
@@ -181,16 +158,18 @@ def my_login(request):
             if user.is_active:
                 request.session['username']=username
                 login(request,user)
-                print(username)
+                print("login:"+username)
                 return HttpResponseRedirect("/")
                 #重定向到成功页面
             else:
                 print ("user is not active")
+                return render(request, 'login.html', {"notice": "密码错误！"})
                 #重定向到失败页面，省略
         else:
             print ("user is None")
+            return render(request, 'login.html',{"notice":"无此用户！"})
+            #return HttpResponseRedirect("/login/")
 
-            return HttpResponseRedirect("/login/")
             #重定向到失败页面，省略
         print (request.session.keys())
         #print request.session['_auth_user_id']
@@ -202,13 +181,24 @@ def my_logout(request):
     print (request.session.keys())
     return HttpResponseRedirect("/")
 
-def register(request):
 
+def register(request):
+    print("jin ru request")
     na = request.POST['username']
     em = request.POST['email']
     password = request.POST['password']
+    # password2=request.POST['password2']
+    # if password!=password2:
+    #
+    users=User.objects.filter(username=na)
+
+    if len(users) != 0:
+        print("该用户已注册")
+        return render(request, 'register.html')
+
     user = User.objects.create_user(username=na,email=em,password=password)
     user.save()
     print("creat a User")
     return render(request,'login.html')
+
 
