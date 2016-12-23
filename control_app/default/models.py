@@ -18,12 +18,22 @@ class Personlist(models.Model):
 #     email = models.EmailField(max_length=20)
 #     password = models.CharField(max_length=10)
 
-#设备数据库m
+#设备数据库
 class Machine(models.Model):
     user = models.ForeignKey(User)
     SN = models.CharField(max_length=10,unique='true')
     name = models.CharField(max_length=10)
     temperature = models.CharField(max_length=10)
-    time = models.CharField(max_length=10)
+    time = models.DateField(auto_now="true")
     warning = models.CharField(max_length=10)
     state = models.CharField(max_length=10)
+    limit = models.CharField(max_length=10)
+
+
+#每个设备的log库
+class Machine_log(models.Model):
+    SN = models.ForeignKey(Machine)
+    history_temperature = models.CharField(max_length=10) #温度
+    temperature_change_time = models.CharField(max_length=20) #温度改变时间
+    history_warning = models.CharField(max_length=10)     #状态
+    warning_change_time = models.CharField(max_length=20)  #报警时间
