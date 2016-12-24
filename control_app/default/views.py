@@ -132,7 +132,7 @@ def addlist(request):
         state_log.save()
         machinelist = Machine.objects.filter(user=user)
         #监测函数，检测温度有没有到阈值
-        detection(user)
+        detection(machine.SN,user)
         return render(request,'table.html',{'machinelist':machinelist,'username':username})
 
 def openclose(request):
@@ -196,7 +196,7 @@ def updatelist(request):
 
         machinelist = Machine.objects.filter(user=user)
         # 监测函数，检测温度有没有到阈值
-        detection(user)
+        detection(machine.SN,user)
         return render(request,'table.html',{'machinelist':machinelist,'username':username})
 
 
@@ -349,8 +349,7 @@ def user_set(request):
 
 
 # -------------------------------------------------------状态监测-------------------------------------
-def detection(user):
-    machinelist = Machine.objects.filter(user=user)
-    for item in machinelist :
-        if item.temperature > item.limit:
-            send_email(user.email, item.SN)
+def detection(SN,user):
+    machine = Machine.objects.get(SN=SN)
+    if machine.temperature > machine.limit:
+        send_email(user.email, machine.SN)
