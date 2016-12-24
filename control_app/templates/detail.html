@@ -262,10 +262,6 @@
 										<a class="btn btn-info" href="/update/?machineid={{ machine.id }}">
 											<i class="fa fa-edit "></i>
 										</a>
-                                        <a class="btn btn-danger" href="/openclose/?machineid={{ machine.id }}">
-											<i class="fa fa-power-off "></i>
-                                        </a>
-									</td>
                                 </tr>
 							  </tbody>
 
@@ -370,8 +366,13 @@
 {#    $("#qwe").text((new Date()).toString());  获取当前时间#}
  <script>
         $(document).ready(function () {
-            setInterval("startRequest()",1000);
+            setInterval("startRequest()",1500);
+
         });
+
+
+
+{# d动态定时刷 温度 状态 报警三个表#}
         function startRequest()
         {
 {#            post方式  记得关csrf 否则不能提交数据#}
@@ -382,17 +383,19 @@
                     data:{"machineid":$("#machine_id").text()},
                     dataType: "JSON",
                     success: function (data) {
+                        var id= $("#machine_id").text();
+                        reload_machine_table(id)
                         reload_table(data)
+
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        alert("出现未知错误，请手动刷新"+jqXHR+textStatus+errorThrown)
+                        //alert("出现未知错误，请手动刷新"+jqXHR+textStatus+errorThrown)
                     }
                 }
             )
         }
 
         function reload_table(data) {
-
             //state_table
             $("#state_table").children("tbody").empty()
                 var htmlstr = ""
@@ -429,6 +432,54 @@
                 $("#warning_table").children("tbody").html(htmlstr);
 
         }
+
+
+
+
+                function reload_machine_table (id)
+            {
+                $.ajax(
+                    {
+                        url:"/AjaxTable/",
+                        type:"GET",
+                        dataType:"JSON",
+                        success: function (data) {
+                            $("#machine_table").children("tbody").empty();
+                            var htmlstr = "";
+                            var flag = 0;
+                            for(var i=0 ; i< data.machinelist.length; i++)
+                            {
+                                if(data.machinelist[i].id == id)
+                                {
+                                    flag=1;
+                                    break;
+                                }
+                            }
+                            if(flag == 0)
+                            {
+                                alert("未找到该设备，出错")
+                                return 0;
+                            }
+                            htmlstr = htmlstr + "<tr>" +
+                                "<td  id='machine_id' class='hidden'>" + data.machinelist[i].id + "</td>" +
+                                "<td>" + data.machinelist[i].SN + "</td>" +
+                                "<td>" + data.machinelist[i].name + "</td>" +
+                                "<td>" + data.machinelist[i].temperature + "</td>" +
+                                "<td>" + data.machinelist[i].time + "</td>" +
+                                "<td>" + data.machinelist[i].warning + "</td>" +
+                                "<td>" + data.machinelist[i].state + "</td>" +
+                                "<td>" + "<a class='btn btn-success'id='detail_button' href='/detail/?machineid=" + data.machinelist[i].id + "' > <i class='fa fa-search-plus '></i> </a>" +" "+
+                                "<a class='btn btn-info' id='change_button' href='/update/?machineid=" + data.machinelist[i].id + "'> <i class='fa fa-edit'></i> </a>" +" "+
+                                "</tr>";
+
+                            $("#machine_table").children("tbody").html(htmlstr);
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                               alert("machine_table刷新错误");
+                        }
+                    }
+                )
+            }
 </script>
 
 

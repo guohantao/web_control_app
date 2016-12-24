@@ -217,7 +217,7 @@
                 <h3 class="page-header"><i class="fa fa-table"></i>报警历史</h3>
                 <ol class="breadcrumb">
                     <li><i class="fa fa-home"></i><a href="/">Home</a></li>
-                    <li><i class="fa fa-table" href="/table/"></i>设备管理</li>
+                    <li><i class="fa fa-table"></i><a href="/table/">设备管理</a></li>
                     <li><i class="fa fa-table"></i>报警历史</li>
                 </ol>
             </div>
@@ -237,10 +237,10 @@
                     </div>
                     <div class="panel-body" style="display: block;">
                     <p id="test"></p>
-                        <table id="machine_table"
-                               class="table table-striped table-bordered bootstrap-datatable datatable">
+                        <table id="machine_table" class="table table-striped table-bordered bootstrap-datatable datatable">
                             <thead>
                             <tr>
+                                <th class="hidden">id</th>
                                 <th>SN</th>
                                 <th>报警</th>
                                 <th>时间</th>
@@ -248,137 +248,58 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for warning in warning_list %}
+{#                            {% for warning in warning_list %}#}
                                 <tr>
-                                    <td>{{ warning.machine.SN }}</td>
-                                    <td>{{ warning.history_warning }}</td>
-                                    <td>{{ warning.warning_change_time }}</td>
-
-                                    <td>
-                                        <a class="btn btn-success" id='detail_button'
-                                           href="/detail/?machineid={{ warning.machine.id }}">
-                                            <i class="fa fa-search-plus "></i>
-                                        </a>
-                                        <a class="btn btn-info" id='change_button'
-                                           href="/update/?machineid={{ warning.machine.id }}">
-                                            <i class="fa fa-edit "></i>
-                                        </a>
-                                        <a class="btn btn-danger btnOC" id='OC_button'
-                                            href="/openclose/?machineid={{ warning.machine.id }}">
-                                            <i class="fa fa-power-off "></i>
-                                        </a>
-                                    </td>
+{#                                    <td class="hidden">{{ warning.machine.id }}</td>#}
+{#                                    <td>{{ warning.machine.SN }}</td>#}
+{#                                    <td>{{ warning.history_warning }}</td>#}
+{#                                    <td>{{ warning.warning_change_time }}</td>#}
+{##}
+{#                                    <td>#}
+{#                                        <a class="btn btn-success" id='detail_button'#}
+{#                                           href="/detail/?machineid={{ warning.machine.id }}">#}
+{#                                            <i class="fa fa-search-plus "></i>#}
+{#                                        </a>#}
+{#                                    </td>#}
                                 </tr>
-                            {% endfor %}
+{#                            {% endfor %}#}
                             </tbody>
                         </table>
-                        <a id="add" type="button" class="btn btn-default pull-right" href="/add/">添加</a>
                     </div>
                 </div>
             </div><!--/col-->
         </div>
     </div>
 <script>
-    $(document).ready(function () {
+        $(document).ready(function () {
+            setInterval("reload_history_warning_table()",1000);
+        });
 
 
-         $("#machine_table").on('click',".btnOC",
-            function () {
-                $.ajax(
-                    {
-                        url: "/openclose/",
-                        type: "GET",
-                        data: {"machineid": $(this).parent("td").siblings("td.hidden").text()},
-                        dataType: "JSON",
-                        success: function (data) {
-                            reload_table(data);
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            alert("关闭失败");
-                        }
-                    }
-                )
-            })
-
-
-
-
-        $("#machine_table").on('click',".btnDel",
-            function () {
-                $.ajax(
-                    {
-                        url: "/del/",
-                        type: "GET",
-                        data: {"machineid": $(this).parent("td").siblings("td.hidden").text()},
-                        dataType: "JSON",
-                        success: function (data) {
-                            reload_all_table();
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            alert("数据错误");
-                        }
-                    }
-                )
-            })
-    })
-
-    function reload_table(data) {
-{#                    var htmlstr = ""#}
-{#                    for (var i = 0; i < data.machinelist.length; i++) {#}
-{#                        htmlstr = htmlstr+"id:"+data.machinelist[i].id + "sn:"+data.machinelist[i].SN  +"name:"+ data.machinelist[i].name +"temp"+ data.machinelist[i].temperature +"time"+ data.machinelist[i].time +"warning:" +data.machinelist[i].warning + "state"+data.machinelist[i].state ;#}
-{##}
-{#                    }#}
-{#                    $("#test").html(htmlstr);#}
-{#                      ajax 要区分那个按钮  因为ID不同，不能用ID作为区分#}
-        $("#machine_table").children("tbody").empty()
-        var htmlstr = ""
-        for (var i = 0; i < data.machinelist.length; i++) {
-            htmlstr = htmlstr + "<tr>" +
-                "<td class='hidden'>" + data.machinelist[i].id + "</td>" +
-                "<td>" + data.machinelist[i].SN + "</td>" +
-                "<td>" + data.machinelist[i].name + "</td>" +
-                "<td>" + data.machinelist[i].temperature + "</td>" +
-                "<td>" + data.machinelist[i].time + "</td>" +
-                "<td>" + data.machinelist[i].warning + "</td>" +
-                "<td>" + data.machinelist[i].state + "</td>" +
-                "<td>" + "<a class='btn btn-success'id='detail_button' href='/detail/?machineid=" + data.machinelist[i].id + "'><i class='fa fa-search-plus '></i>"+
-                          "</a>" +
-                         "<a class='btn btn-info' id='change_button' href='/update/?machineid=" + data.machinelist[i].id + "'><i class='fa fa-edit'></i>+"+ "</a>" +
-                "<a class='btn btn-danger btnDel' id='delete_button'><i class='fa fa-trash-o '></i></a>" +
-                "<a class='btn btn-danger btnOC' id='OC_button'><i class='fa fa-power-off '></i></a>"+
-                "</td>" +
-                "</tr>"
-        }
-        $("#machine_table").children("tbody").html(htmlstr);
-    }
-        function reload_all_table ()
+       function reload_history_warning_table ()
         {
             $.ajax(
                 {
-                    url:"/AjaxTable/",
+                    url:"/ajax_warning/",
                     type:"GET",
                     dataType:"JSON",
                     success: function (data) {
-                        $("#machine_table").children("tbody").empty()
+                            $("#machine_table").children("tbody").empty()
                         var htmlstr = ""
-                        for(var i=0 ; i< data.machinelist.length; i++)
+                        //alert(data.warning_list[0].SN)
+                        for(var i=0 ; i< data.warning_list.length; i++)
                         {
                             htmlstr = htmlstr + "<tr>" +
-                            "<td class='hidden'>" + data.machinelist[i].id + "</td>" +
-                            "<td>" + data.machinelist[i].SN + "</td>" +
-                            "<td>" + data.machinelist[i].name + "</td>" +
-                            "<td>" + data.machinelist[i].temperature + "</td>" +
-                            "<td>" + data.machinelist[i].time + "</td>" +
-                            "<td>" + data.machinelist[i].warning + "</td>" +
-                            "<td>" + data.machinelist[i].state + "</td>" +
-                            "<td>" + "<a class='btn btn-success'id='detail_button' href='/detail/?machineid=" + data.machinelist[i].id + "' > <i class='fa fa-search-plus '></i> </a>" +
-                            "<a class='btn btn-info' id='change_button' href='/update/?machineid=" + data.machinelist[i].id + "'> <i class='fa fa-edit'></i> </a>" +
-                            "<a class='btn btn-danger btnDel' id='delete_button'> <i class='fa fa-trash-o '></i> </a>"+
-                            "<a class='btn btn-danger btnOC' id='OC_button'> <i class='fa fa-power-off '></i> </a>"+
+                            "<td class='hidden'>" + data.warning_list[i].id + "</td>" +
+                            "<td>" + data.warning_list[i].SN + "</td>" +
+                            "<td>" + data.warning_list[i].history_warning + "</td>" +
+                            "<td>" + data.warning_list[i].warning_change_time + "</td>" +
+                            "<td>" + "<a class='btn btn-success'id='detail_button' href='/detail/?machineid=" + data.warning_list[i].id + "' > <i class='fa fa-search-plus '></i> </a>" +" "+
                             "</td>" +
                             "</tr>"
                         }
                         $("#machine_table").children("tbody").html(htmlstr);
+
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                            alert("数据错误");

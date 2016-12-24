@@ -89,15 +89,32 @@ def AjaxTable(request):
     return JsonResponse(res)
 
 def warning_histort(request):
-    if request.method == 'GET':
-        username = request.session['username']
-        user = User.objects.get(username=username)
-        machinelist = Machine.objects.filter(user=user)
-        warning_list= []
-        for item in machinelist:
-            warningl = Warning_log.objects.filter(Q(machine=item) , ~Q(history_warning = "无"))
-            warning_list.extend(warningl)
-        return render(request,'warning_history.html',locals())
+    username = request.session['username']
+    user = User.objects.get(username=username)
+    machinelist = Machine.objects.filter(user=user)
+    warning_list= []
+    for item in machinelist:
+        warningl = Warning_log.objects.filter(Q(machine=item) , ~Q(history_warning = "无"))
+        warning_list.extend(warningl)
+    return render(request,'warning_history.html',locals())
+
+def warning_history_ajax(request):
+    username = request.session['username']
+    user = User.objects.get(username=username)
+    machinelist = Machine.objects.filter(user=user)
+    warning_list = []
+    for item in machinelist:
+        warningl = Warning_log.objects.filter(Q(machine=item), ~Q(history_warning="无"))
+        warning_list.extend(warningl)
+        dictionary_warning_list = []
+    for item in warning_list:
+        temp = {'id':item.id,'SN':item.machine.SN,'history_warning':item.history_warning,'warning_change_time':item.warning_change_time}
+        dictionary_warning_list.append(temp)
+    res = {'success':'true','warning_list':dictionary_warning_list}
+    return JsonResponse(res)
+
+
+
 
 #----------------------------设备添加修改删除---------------------
 # @login_required()
@@ -134,24 +151,34 @@ def addlist(request):
         #监测函数，检测温度有没有到阈值
         detection(machine.SN,user)
         return render(request,'table.html',{'machinelist':machinelist,'username':username})
-
-def openclose(request):
+#ajax实现开
+def open(request):
     machineid = request.GET['machineid']
-    Machine.objects.get(id=machineid).state = "关闭"
-    username = request.session['username']
-    user = User.objects.get(username=username)
-    machinel = Machine.objects.filter(user=user)
-    machinelist = []
-    for item in machinel:
-        temp = {'id': item.id, 'SN': item.SN, 'name': item.name, 'temperature': item.temperature, 'time': item.time,
-                'warning': item.warning, 'state': item.state, 'limit': item.limit}
-        machinelist.append(temp)
-
-    res = {'success': "true", "machinelist": machinelist}
+    machine = Machine.objects.get(id=machineid)
+    if machine.state == "关闭" :
+        machine.state = "正常"
+        machine.save()
+        Time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+        statelog = State_log(machine=machine, history_state=machine.state, state_change_time=Time)
+        statelog.save()
+    res = {'success': "true"}
     print(res)
     return JsonResponse(res)
 
-
+#ajax实现关
+def close(request):
+    # 改变状态为关并记录
+    machineid = request.GET['machineid']
+    machine = Machine.objects.get(id=machineid)
+    if machine.state != "关闭":
+        machine.state = "关闭"
+        machine.save()
+        Time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+        statelog = State_log(machine=machine, history_state=machine.state, state_change_time=Time)
+        statelog.save()
+    res = {'success': "true"}
+    print(res)
+    return JsonResponse(res)
 
 # @login_required()
 #更新机器表 已改
@@ -205,8 +232,6 @@ def updatelist(request):
 # @login_required()
 def dellist(request):
     machineid= request.GET['machineid']
-    print(machineid)
-    print(Machine.objects.get(id=machineid).name)
     Machine.objects.get(id=machineid).delete()
     # Temperature_log.delete(machine= machine)
 

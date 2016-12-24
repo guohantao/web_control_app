@@ -248,6 +248,7 @@
                                 <th>报警</th>
                                 <th>状态</th>
                                 <th>操作</th>
+                                <th>开关</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -259,7 +260,7 @@
                                     <td>{{ machine.temperature }}</td>
                                     <td>{{ machine.time }}</td>
                                     <td>{{ machine.warning }}</td>
-                                    <td>{{ machine.state }}</td>
+                                    <td class="state">{{ machine.state }}</td>
 
                                     <td>
                                         <a class="btn btn-success" id='detail_button'
@@ -273,8 +274,12 @@
                                         <a class="btn btn-danger btnDel" id='delete_button'>
                                             <i class="fa fa-trash-o "></i>
                                         </a>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-success btnO" id='O_button'>
+                                            <i class="fa fa-power-off "></i>
                                         </a>
-                                        <a class="btn btn-danger btnOC" id='OC_button'>
+                                        <a class="btn btn-danger btnC" id='C_button'>
                                             <i class="fa fa-power-off "></i>
                                         </a>
                                     </td>
@@ -290,29 +295,47 @@
     </div>
 <script>
     $(document).ready(function () {
+        //设置表格动态刷新时间
+        setInterval("reload_all_table()",1000);
 
-
-         $("#machine_table").on('click',".btnOC",
+{#         #开按钮ajax#}
+         $("#machine_table").on('click',".btnO",
             function () {
                 $.ajax(
                     {
-                        url: "/openclose/",
+                        url: "/open/",
                         type: "GET",
                         data: {"machineid": $(this).parent("td").siblings("td.hidden").text()},
                         dataType: "JSON",
                         success: function (data) {
-                            reload_table(data);
+                            reload_all_table()
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            alert("打开失败");
+                        }
+                    }
+                )
+            }),
+
+{#        #关按钮ajax#}
+        $("#machine_table").on('click',".btnC",
+            function () {
+                $.ajax(
+                    {
+                        url: "/close/",
+                        type: "GET",
+                        data: {"machineid": $(this).parent("td").siblings("td.hidden").text()},  //'state':$(this).parent("td").siblings("td.state").text()
+                        dataType: "JSON",
+                        success: function (data) {
+                            reload_all_table()
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             alert("关闭失败");
                         }
                     }
                 )
-            })
-
-
-
-
+            }),
+{#        删除按钮ajax#}
         $("#machine_table").on('click',".btnDel",
             function () {
                 $.ajax(
@@ -332,35 +355,7 @@
             })
     })
 
-    function reload_table(data) {
-{#                    var htmlstr = ""#}
-{#                    for (var i = 0; i < data.machinelist.length; i++) {#}
-{#                        htmlstr = htmlstr+"id:"+data.machinelist[i].id + "sn:"+data.machinelist[i].SN  +"name:"+ data.machinelist[i].name +"temp"+ data.machinelist[i].temperature +"time"+ data.machinelist[i].time +"warning:" +data.machinelist[i].warning + "state"+data.machinelist[i].state ;#}
-{##}
-{#                    }#}
-{#                    $("#test").html(htmlstr);#}
-{#                      ajax 要区分那个按钮  因为ID不同，不能用ID作为区分#}
-        $("#machine_table").children("tbody").empty()
-        var htmlstr = ""
-        for (var i = 0; i < data.machinelist.length; i++) {
-            htmlstr = htmlstr + "<tr>" +
-                "<td class='hidden'>" + data.machinelist[i].id + "</td>" +
-                "<td>" + data.machinelist[i].SN + "</td>" +
-                "<td>" + data.machinelist[i].name + "</td>" +
-                "<td>" + data.machinelist[i].temperature + "</td>" +
-                "<td>" + data.machinelist[i].time + "</td>" +
-                "<td>" + data.machinelist[i].warning + "</td>" +
-                "<td>" + data.machinelist[i].state + "</td>" +
-                "<td>" + "<a class='btn btn-success'id='detail_button' href='/detail/?machineid=" + data.machinelist[i].id + "'><i class='fa fa-search-plus '></i>"+
-                          "</a>" +
-                         "<a class='btn btn-info' id='change_button' href='/update/?machineid=" + data.machinelist[i].id + "'><i class='fa fa-edit'></i>+"+ "</a>" +
-                "<a class='btn btn-danger btnDel' id='delete_button'><i class='fa fa-trash-o '></i></a>" +
-                "<a class='btn btn-danger btnOC' id='OC_button'><i class='fa fa-power-off '></i></a>"+
-                "</td>" +
-                "</tr>"
-        }
-        $("#machine_table").children("tbody").html(htmlstr);
-    }
+
         function reload_all_table ()
         {
             $.ajax(
@@ -381,11 +376,14 @@
                             "<td>" + data.machinelist[i].time + "</td>" +
                             "<td>" + data.machinelist[i].warning + "</td>" +
                             "<td>" + data.machinelist[i].state + "</td>" +
-                            "<td>" + "<a class='btn btn-success'id='detail_button' href='/detail/?machineid=" + data.machinelist[i].id + "' > <i class='fa fa-search-plus '></i> </a>" +
-                            "<a class='btn btn-info' id='change_button' href='/update/?machineid=" + data.machinelist[i].id + "'> <i class='fa fa-edit'></i> </a>" +
-                            "<a class='btn btn-danger btnDel' id='delete_button'> <i class='fa fa-trash-o '></i> </a>"+
-                            "<a class='btn btn-danger btnOC' id='OC_button'> <i class='fa fa-power-off '></i> </a>"+
+                            "<td>" + "<a class='btn btn-success'id='detail_button' href='/detail/?machineid=" + data.machinelist[i].id + "' > <i class='fa fa-search-plus '></i> </a>" +" "+
+                            "<a class='btn btn-info' id='change_button' href='/update/?machineid=" + data.machinelist[i].id + "'> <i class='fa fa-edit'></i> </a>" +" "+
+                            "<a class='btn btn-danger btnDel' id='delete_button'> <i class='fa fa-trash-o '></i> </a>"+" "+
                             "</td>" +
+                            "<td>" +
+                              "<a class='btn btn-success btnO' id='O_button'> <i class='fa fa-power-off '></i> </a>"  + " "+
+                              "<a class='btn btn-danger btnC' id='C_button'> <i class='fa fa-power-off '></i> </a>" + " "+
+                            "</td>"+
                             "</tr>"
                         }
                         $("#machine_table").children("tbody").html(htmlstr);
