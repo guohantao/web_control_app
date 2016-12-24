@@ -15,11 +15,11 @@ urlpatterns = [
      url(r'^openclose/$',views.openclose),#设备详细
      url(r'^logtable/$',views.get_log_table),#ajax设备log_table
      url(r'^AjaxTable/$',views.AjaxTable),#ajax所有设备表
-     #url(r'^addpage/$',views.getaddpage),  #打开查找页面
+     url(r'^user_set/$',views.user_set),#ajax所有设备表
+     url(r'^search_machine/$',views.gettable),  #打开查找页面
 
      # 以下函数未定义，你们自己在VIEW里写
      url(r'^warning_history/$',views.getindex),  #报警历史
-     url(r'^set/$',views.getindex),  #打开设置页面
 
 
 

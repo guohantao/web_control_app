@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 import logging
 import time
+from default.email import send_email
 
 
 # Create your views here.
@@ -45,14 +46,21 @@ def getindex(request):
 
 @login_required()
 def gettable(request):
-    if 'username'in request.session:
-        username=request.session['username']
-        user = User.objects.filter(username=username)
-        machinelist = Machine.objects.filter(user=user)
-        return render(request,'table.html',locals())
-    else:
-        return render(request,'login.html')
-# ajax动态更新主页详情
+   if request.method == 'GET':
+       if 'username' in request.session:
+           username = request.session['username']
+           user = User.objects.filter(username=username)
+           machinelist = Machine.objects.filter(user=user)
+           return render(request, 'table.html', locals())
+       else:
+           return render(request, 'login.html')
+   elif request.method == 'POST':
+       username = request.session['username']
+       user = User.objects.filter(username=username)
+       machinelist = Machine.objects.filter(SN=request.POST['machinesn'])
+       return render(request, 'table.html', locals())
+
+# ajax动态更新主页详情,获取设备列表
 def AjaxTable(request):
     username = request.session['username']
     user = User.objects.get(username=username)
@@ -111,6 +119,8 @@ def addlist(request):
         warning_log.save()
         state_log.save()
         machinelist = Machine.objects.filter(user=user)
+        #监测函数，检测温度有没有到阈值
+        detection(user)
         return render(request,'table.html',{'machinelist':machinelist,'username':username})
 
 def openclose(request):
@@ -129,20 +139,6 @@ def openclose(request):
     print(res)
     return JsonResponse(res)
 
-
-
-# #无用
-# def getaddpage(request):
-#     if 'username' in request.session:
-#         username = request.session['username']
-#         return render(request, 'table.html', locals())
-#     else:
-#         return render(request, 'login.html')
-
-# def getlist(request):
-#    # personlist = Personlist.objects.all()
-#     #logger.info("XXXXXXXXXXXXXXXXXXXXXXXXlogging")
-#     return render(request, 'index.html')
 
 
 # @login_required()
@@ -187,6 +183,8 @@ def updatelist(request):
 
 
         machinelist = Machine.objects.filter(user=user)
+        # 监测函数，检测温度有没有到阈值
+        detection(user)
         return render(request,'table.html',{'machinelist':machinelist,'username':username})
 
 
@@ -248,6 +246,20 @@ def get_log_table(request):
 #         return render(request,'showsearch.html',locals())
 #     return  render(request,'table.html',locals())
 #
+# #无用
+# def getaddpage(request):
+#     if 'username' in request.session:
+#         username = request.session['username']
+#         return render(request, 'table.html', locals())
+#     else:
+#         return render(request, 'login.html')
+
+# def getlist(request):
+#    # personlist = Personlist.objects.all()
+#     #logger.info("XXXXXXXXXXXXXXXXXXXXXXXXlogging")
+#     return render(request, 'index.html')
+
+
 #-------------------------------------用户注册登录管理--------------------------------
 def my_login(request):
     if request.method == 'GET':
@@ -270,7 +282,7 @@ def my_login(request):
                 #重定向到失败页面，省略
         else:
             print ("user is None")
-            return render(request, 'login.html',{"notice":"无此用户！"})
+            return render(request, 'login.html',{"notice":"无此用户，或密码错误，请确认用户名和密码！"})
             #return HttpResponseRedirect("/login/")
 
             #重定向到失败页面，省略
@@ -282,7 +294,7 @@ def my_login(request):
 def my_logout(request):
     logout(request)
     print (request.session.keys())
-    return HttpResponseRedirect("/")
+    return render(request,'login.html',{'notice':"请登录"})
 
 
 def register(request):
@@ -297,11 +309,36 @@ def register(request):
 
     if len(users) != 0:
         print("该用户已注册")
-        return render(request, 'register.html')
+        return render(request, 'login.html',{'notice':"该用户已注册,请直接登录"})
 
     user = User.objects.create_user(username=na,email=em,password=password)
     user.save()
     print("creat a User")
-    return render(request,'login.html')
+    return render(request,'login.html',{'notice':"注册成功，请登录"})
 
 
+def user_set(request):
+    if request.method == 'GET':
+        username = request.session['username']
+        user = User.objects.get(username=username)
+        return render(request,'user_set.html',{'username':username,'password':user.password})
+    elif request.method == 'POST':
+        username = request.session['username']
+        old_password = request.POST['old_password']
+        new_password = request.POST['new_password_affirm']
+        user = User.objects.get(username=username)
+        if user.check_password(old_password):
+            user.set_password(new_password)
+            user.save()
+            my_logout(request)
+            return render(request,'login.html',{'notice':"请登录"})
+        else:
+            return render(request, 'user_set.html',{'username': username, 'password': user.password, 'result_information': "原始密码输入错误"})
+
+
+# -------------------------------------------------------状态监测-------------------------------------
+def detection(user):
+    machinelist = Machine.objects.filter(user=user)
+    for item in machinelist :
+        if item.temperature > item.limit:
+            send_email(user.email, item.SN)
