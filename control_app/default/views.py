@@ -1,5 +1,6 @@
 #coding=utf-8
 from django.shortcuts import render
+from django.db.models import Q
 from django.http import JsonResponse
 from django.http import HttpResponseRedirect
 from default.models import Personlist,Machine,User,Temperature_log,Warning_log,State_log
@@ -86,6 +87,17 @@ def AjaxTable(request):
 
     res = {'success': "true", "machinelist": machinelist,'all_machine':all_machine,'run_machine':run_machine,'stop_machine':stop_machine,'pause_machine':pause_machine,'break_machine':break_machine}
     return JsonResponse(res)
+
+def warning_histort(request):
+    if request.method == 'GET':
+        username = request.session['username']
+        user = User.objects.get(username=username)
+        machinelist = Machine.objects.filter(user=user)
+        warning_list= []
+        for item in machinelist:
+            warningl = Warning_log.objects.filter(Q(machine=item) , ~Q(history_warning = "无"))
+            warning_list.extend(warningl)
+        return render(request,'warning_history.html',locals())
 
 #----------------------------设备添加修改删除---------------------
 # @login_required()

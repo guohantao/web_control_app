@@ -19,7 +19,7 @@ urlpatterns = [
      url(r'^search_machine/$',views.gettable),  #打开查找页面
 
      # 以下函数未定义，你们自己在VIEW里写
-     url(r'^warning_history/$',views.getindex),  #报警历史
+     url(r'^warning_history/$',views.warning_histort),  #报警历史
 
 
 
