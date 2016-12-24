@@ -450,7 +450,7 @@
                         data: {"machineid": $(this).parent("td").siblings("td.hidden").text()},
                         dataType: "JSON",
                         success: function (data) {
-                            reload_table(data);
+                            reload_all_table();
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             alert("数据错误");
@@ -493,7 +493,7 @@
         {
             $.ajax(
                 {
-                    url:"/table/",
+                    url:"/AjaxTable/",
                     type:"GET",
                     dataType:"JSON",
                     success: function (data) {

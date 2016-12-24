@@ -52,8 +52,32 @@ def gettable(request):
         return render(request,'table.html',locals())
     else:
         return render(request,'login.html')
+# ajax动态更新主页详情
+def AjaxTable(request):
+    username = request.session['username']
+    user = User.objects.get(username=username)
+    machinel = Machine.objects.filter(user=user)
+    machinelist = []
+    all_machine = len(machinel)
+    run_machine = 0
+    stop_machine = 0
+    pause_machine = 0
+    break_machine = 0
+    for item in machinel:
+        temp = {'id': item.id, 'SN': item.SN, 'name': item.name, 'temperature': item.temperature, 'time': item.time,
+                'warning': item.warning, 'state': item.state, 'limit': item.limit}
+        machinelist.append(temp)
+        if item.state == "正常":
+            run_machine += 1
+        elif item.state == "暂停":
+            pause_machine += 1
+        elif item.state == "关闭":
+            stop_machine += 1
+        elif item.state == "故障":
+            break_machine += 1
 
-
+    res = {'success': "true", "machinelist": machinelist,'all_machine':all_machine,'run_machine':run_machine,'stop_machine':stop_machine,'pause_machine':pause_machine,'break_machine':break_machine}
+    return JsonResponse(res)
 
 #----------------------------设备添加修改删除---------------------
 # @login_required()
@@ -175,25 +199,44 @@ def dellist(request):
     print(Machine.objects.get(id=machineid).name)
     Machine.objects.get(id=machineid).delete()
     # Temperature_log.delete(machine= machine)
-    username=request.session['username']
-    user = User.objects.get(username=username)
-    machinel = Machine.objects.filter(user=user)
-    machinelist=[]
-    for item in machinel:
-        temp = {'id':item.id,'SN':item.SN,'name':item.name,'temperature':item.temperature,'time':item.time , 'warning':item.warning,'state':item.state,'limit':item.limit}
-        machinelist.append(temp)
 
-    res={'success':"true","machinelist":machinelist}
-    print(res)
+    res = {"success":"true"}
     return  JsonResponse(res)
 
-# 显示该设备详情
+# 显示该设备详情,POST方式实现动态刷新
 def detail(request):
-    machineid = request.GET['machineid']
-    machine = Machine.objects.get(id=machineid)
-    username = request.session['username']
-    return  render(request,'detail.html',{'machine':machine,'username':username})
+    if request.method == "GET":
+        print("jin ru detail get")
+        machineid = request.GET['machineid']
+        print("detail id:"+machineid)
+        machine = Machine.objects.get(id=machineid)
+        username = request.session['username']
+        return render(request, 'detail.html', {'machine': machine, 'username': username})
 
+
+#ajax实现log表动态刷新
+def get_log_table(request):
+    machineid = request.POST['machineid']
+    print("machineid:"+machineid)
+    machine = Machine.objects.get(id=machineid)
+    print(machine)
+    state_log = []
+    temperature_log = []
+    warning_log = []
+    statelist = State_log.objects.filter(machine=machine)
+    temperaturelist = Temperature_log.objects.filter(machine=machine)
+    warninglist = Warning_log.objects.filter(machine=machine)
+    for item in statelist:
+        temp = {'state': item.history_state, 'time': item.state_change_time}
+        state_log.append(temp)
+    for item in temperaturelist:
+        temp = {'temperature': item.history_temperature, 'time': item.temperature_change_time}
+        temperature_log.append(temp)
+    for item in warninglist:
+        temp = {'warning': item.history_warning, 'time': item.warning_change_time}
+        warning_log.append(temp)
+    res = {'success': "true", 'state_log': state_log, 'temperature_log': temperature_log, 'warning_log': warning_log}
+    return JsonResponse(res)
 
 # #无用
 # def searchlist(request):

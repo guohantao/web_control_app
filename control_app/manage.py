@@ -29,13 +29,13 @@ def start_django():
 
 if __name__ == "__main__":
     #send_email("850165905@qq.com","1234")
-    # start_django()
-    clientM= threading.Thread(target=client_model, name='clientM')
-    djangoM = threading.Thread(target=start_django, name='djangoM')
-    clientM.start()
-    djangoM.start()
-
-    clientM.join()
-    djangoM.join()
+     start_django()
+    # clientM= threading.Thread(target=client_model, name='clientM')
+    # djangoM = threading.Thread(target=start_django, name='djangoM')
+    # clientM.start()
+    # djangoM.start()
+    #
+    # clientM.join()
+    # djangoM.join()
 
 

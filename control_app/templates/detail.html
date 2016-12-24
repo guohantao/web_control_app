@@ -319,7 +319,7 @@
 			<!-- start: Main Menu -->
 
 			<!-- end: Main Menu -->
-
+{#-----------------------------------------------------------------表格---------------------------------------------------------------------------#}
 		<!-- start: Content -->
 		<div class="main sidebar-minified" style="min-height: 540px;">
 
@@ -333,7 +333,7 @@
 				</div>
 			</div>
 
-
+{#设备表格#}
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="panel panel-default">
@@ -346,9 +346,10 @@
 							</div>
 						</div>
 						<div class="panel-body" style="display: block;">
-							<table class="table table-striped table-bordered bootstrap-datatable datatable">
+							<table id="machine_table" class="table table-striped table-bordered bootstrap-datatable datatable">
 							  <thead>
 								  <tr>
+                                      <th class="hidden">id</th>
 									  <th>SN</th>
                                       <th>名称</th>
                                       <th>温度</th>
@@ -360,6 +361,7 @@
 							  </thead>
 							  <tbody>
                                 <tr>
+                                    <td  id="machine_id" class="hidden">{{ machine.id }}</td>
                                     <td>{{ machine.SN }}</td>
                                     <td>{{ machine.name }}</td>
                                     <td>{{ machine.temperature }}</td>
@@ -389,12 +391,13 @@
 					</div>
 				</div><!--/col-->
             </div>
-{#设备历史记录表#}
+
              <div class="row">
-				<div class="col-lg-12">
+                 {#设备报警历史记录表#}
+				<div class="col-lg-4">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<h2><i class="fa fa-table red"></i><span class="break"></span><strong>设备列表</strong></h2>
+							<h2><i class="fa fa-table red"></i><span class="break"></span><strong>报警历史表</strong></h2>
 							<div class="panel-actions">
 								<a href="table.html#" class="btn-setting"><i class="fa fa-rotate-right"></i></a>
 								<a href="table.html#" class="btn-minimize"><i class="fa fa-chevron-up"></i></a>
@@ -402,52 +405,148 @@
 							</div>
 						</div>
 						<div class="panel-body" style="display: block;">
-							<table class="table table-striped table-bordered bootstrap-datatable datatable">
+							<table id="warning_table" class="table table-striped table-bordered bootstrap-datatable datatable">
 							  <thead>
 								  <tr>
-									  <th>SN</th>
-                                      <th>名称</th>
-                                      <th>温度</th>
-									  <th>上次更新</th>
-                                      <th>报警</th>
-                                      <th>状态</th>
-									  <th>操作</th>
+									  <th>报警状态</th>
+									  <th>时间</th>
 								  </tr>
 							  </thead>
 							  <tbody>
                                 <tr>
-                                    <td>desktop999988</td>
-                                    <td>1</td>
-                                    <td>12.5</td>
-                                    <td>None</td>
-                                    <td>无</td>
-                                    <td>正常</td>
-
-                                    <td>
-										<a class="btn btn-success" href="/detail/?machineid=11">
-											<i class="fa fa-search-plus "></i>
-										</a>
-										<a class="btn btn-info" href="/update/?machineid=11">
-											<i class="fa fa-edit "></i>
-										</a>
-										<a class="btn btn-danger" href="/del/?machineid=11">
-											<i class="fa fa-trash-o "></i>
-
-										</a>
-									</td>
                                 </tr>
 							  </tbody>
-
 						  </table>
-                            <a href="/add/" type="button" class="btn btn-default pull-right">添加</a>
+                            <p id="qwe"></p>
 						</div>
 					</div>
 				</div><!--/col-->
+
+{#                         设备温度记录表#}
+                <div class="col-lg-4">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h2><i class="fa fa-table red"></i><span class="break"></span><strong>温度历史表</strong></h2>
+							<div class="panel-actions">
+								<a href="table.html#" class="btn-setting"><i class="fa fa-rotate-right"></i></a>
+								<a href="table.html#" class="btn-minimize"><i class="fa fa-chevron-up"></i></a>
+								<a href="table.html#" class="btn-close"><i class="fa fa-times"></i></a>
+							</div>
+						</div>
+						<div class="panel-body" style="display: block;">
+							<table id="temperature_table" class="table table-striped table-bordered bootstrap-datatable datatable">
+							  <thead>
+								  <tr>
+									  <th>温度</th>
+                                      <th>时间</th>
+								  </tr>
+							  </thead>
+							  <tbody>
+                                <tr>
+                                </tr>
+							  </tbody>
+						  </table>
+						</div>
+					</div>
+				</div><!--/col-->
+
+                 {#            设备状态记录表#}
+
+                 <div class="col-lg-4">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h2><i class="fa fa-table red"></i><span class="break"></span><strong>状态变更历史表</strong></h2>
+							<div class="panel-actions">
+								<a href="table.html#" class="btn-setting"><i class="fa fa-rotate-right"></i></a>
+								<a href="table.html#" class="btn-minimize"><i class="fa fa-chevron-up"></i></a>
+								<a href="table.html#" class="btn-close"><i class="fa fa-times"></i></a>
+							</div>
+						</div>
+						<div class="panel-body" style="display: block;">
+							<table id="state_table" class="table table-striped table-bordered bootstrap-datatable datatable">
+							  <thead>
+								  <tr>
+									  <th>状态</th>
+                                      <th>时间</th>
+								  </tr>
+							  </thead>
+							  <tbody>
+                                <tr>
+                                </tr>
+							  </tbody>
+						  </table>
+						</div>
+					</div>
+				</div><!--/col-->
+
+
             </div>
         </div>
 
+{#     动态刷新脚本      #}
+{#    $("#qwe").text((new Date()).toString());  获取当前时间#}
+ <script>
+        $(document).ready(function () {
+            setInterval("startRequest()",1000);
+        });
+        function startRequest()
+        {
+{#            post方式  记得关csrf 否则不能提交数据#}
+            $.ajax(
+                {
+                    url:"/logtable/",
+                    type: "POST",
+                    data:{"machineid":$("#machine_id").text()},
+                    dataType: "JSON",
+                    success: function (data) {
+                        reload_table(data)
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("出现未知错误，请手动刷新"+jqXHR+textStatus+errorThrown)
+                    }
+                }
+            )
+        }
+
+        function reload_table(data) {
+
+            //state_table
+            $("#state_table").children("tbody").empty()
+                var htmlstr = ""
+                for (var i = 0; i < data.state_log.length; i++) {
+                    htmlstr = htmlstr + "<tr>" +
+                        "<td>" + data.state_log[i].state + "</td>" +
+                        "<td>" + data.state_log[i].time + "</td>" +
+                        "</tr>"
+                }
+                $("#state_table").children("tbody").html(htmlstr);
+
+            //temperature table
+            $("#temperature_table").children("tbody").empty()
+                var htmlstr = ""
+                for (var i = 0; i < data.temperature_log.length; i++) {
+                    htmlstr = htmlstr + "<tr>" +
+                        "<td>" + data.temperature_log[i].temperature + "</td>" +
+                        "<td>" + data.temperature_log[i].time + "</td>" +
+                        "</tr>"
+                }
+                $("#temperature_table").children("tbody").html(htmlstr);
 
 
+
+            //warning_table
+            $("#warning_table").children("tbody").empty()
+                var htmlstr = ""
+                for (var i = 0; i < data.warning_log.length; i++) {
+                    htmlstr = htmlstr + "<tr>" +
+                        "<td>" + data.warning_log[i].warning + "</td>" +
+                        "<td>" + data.warning_log[i].time + "</td>" +
+                        "</tr>"
+                }
+                $("#warning_table").children("tbody").html(htmlstr);
+
+        }
+</script>
 
 
 			<!--/row-->
