@@ -1,0 +1,413 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    	<meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <title>Proton - Admin Template</title>
+
+{#		<!-- Import google fonts - Heading first/ text second -->#}
+{#        <link rel='stylesheet' type='text/css' href='http://fonts.useso.com/css?family=Open+Sans:400,700|Droid+Sans:400,700' />#}
+{#        <!--[if lt IE 9]>#}
+{#<link href="http://fonts.useso.com/css?family=Open+Sans:400" rel="stylesheet" type="text/css" />#}
+{#<link href="http://fonts.useso.com/css?family=Open+Sans:700" rel="stylesheet" type="text/css" />#}
+{#<link href="http://fonts.useso.com/css?family=Droid+Sans:400" rel="stylesheet" type="text/css" />#}
+{#<link href="http://fonts.useso.com/css?family=Droid+Sans:700" rel="stylesheet" type="text/css" />#}
+<![endif]-->
+
+		<!-- Favicon and touch icons -->
+		<link rel="shortcut icon" href="/static/assets/ico/favicon.ico" type="image/x-icon" />
+
+	    <!-- Css files -->
+	    <link href="/static/assets/css/bootstrap.min.css" rel="stylesheet">
+		<link href="/static/assets/css/jquery.mmenu.css" rel="stylesheet">
+		<link href="/static/assets/css/font-awesome.min.css" rel="stylesheet">
+		<link href="/static/assets/plugins/jquery-ui/css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+		<link href="/static/assets/plugins/chosen/css/chosen.css" rel="stylesheet">
+	    <link href="/static/assets/css/style.min.css" rel="stylesheet">
+		<link href="/static/assets/css/add-ons.min.css" rel="stylesheet">
+
+	    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	    <!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	    <![endif]-->
+{#        <link rel='stylesheet' type='text/css' href='http://fonts.useso.com/css?family=Open+Sans:400,700|Droid+Sans:400,700' />#}
+        <!--[if lt IE 9]>
+<link href="http://fonts.useso.com/css?family=Open+Sans:400" rel="stylesheet" type="text/css" />
+<link href="http://fonts.useso.com/css?family=Open+Sans:700" rel="stylesheet" type="text/css" />
+<link href="http://fonts.useso.com/css?family=Droid+Sans:400" rel="stylesheet" type="text/css" />
+<link href="http://fonts.useso.com/css?family=Droid+Sans:700" rel="stylesheet" type="text/css" />
+<![endif]-->
+
+		<!-- Fav and touch icons -->
+		<link rel="shortcut icon" href="static/assets/ico/favicon.ico" type="image/x-icon" />
+
+	    <!-- Css files -->
+	    <link href="static/assets/css/bootstrap.min.css" rel="stylesheet">
+		<link href="static/assets/css/jquery.mmenu.css" rel="stylesheet">
+		<link href="static/assets/css/font-awesome.min.css" rel="stylesheet">
+		<link href="static/assets/css/climacons-font.css" rel="stylesheet">
+		<link href="static/assets/plugins/xcharts/css/xcharts.min.css" rel=" stylesheet">
+		<link href="static/assets/plugins/fullcalendar/css/fullcalendar.css" rel="stylesheet">
+		<link href="static/assets/plugins/morris/css/morris.css" rel="stylesheet">
+		<link href="static/assets/plugins/jquery-ui/css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+		<link href="static/assets/plugins/jvectormap/css/jquery-jvectormap-1.2.2.css" rel="stylesheet">
+	    <link href="static/assets/css/style.min.css" rel="stylesheet">
+		<link href="static/assets/css/add-ons.min.css" rel="stylesheet">
+
+	    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	    <!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	    <![endif]-->
+<!-- start: JavaScript-->
+	<!--[if !IE]>-->
+
+			<script src="/static/assets/js/jquery-2.1.1.min.js"></script>
+
+	<!--<![endif]-->
+
+	<!--[if IE]>
+
+		<script src="/static/assets/js/jquery-1.11.1.min.js"></script>
+
+	<![endif]-->
+
+	<!--[if !IE]>-->
+
+		<script type="text/javascript">
+			window.jQuery || document.write("<script src='/static/assets/js/jquery-2.1.1.min.js'>"+"<"+"/script>");
+		</script>
+
+	<!--<![endif]-->
+
+	<!--[if IE]>
+
+		<script type="text/javascript">
+	 	window.jQuery || document.write("<script src='/static/assets/js/jquery-1.11.1.min.js'>"+"<"+"/script>");
+		</script>
+
+	<![endif]-->
+	<script src="/static/assets/js/jquery-migrate-1.2.1.min.js"></script>
+	<script src="/static/assets/js/bootstrap.min.js"></script>
+
+
+	<!-- page scripts -->
+	<script src="/static/assets/plugins/jquery-ui/js/jquery-ui-1.10.4.min.js"></script>
+	<script src="/static/assets/plugins/chosen/js/chosen.jquery.min.js"></script>
+	<script src="/static/assets/plugins/autosize/jquery.autosize.min.js"></script>
+	<script src="/static/assets/plugins/placeholder/jquery.placeholder.min.js"></script>
+	<script src="/static/assets/plugins/maskedinput/jquery.maskedinput.min.js"></script>
+	<script src="/static/assets/plugins/inputlimiter/js/jquery.inputlimiter.1.3.1.min.js"></script>
+	<script src="/static/assets/plugins/datepicker/js/bootstrap-datepicker.min.js"></script>
+	<script src="/static/assets/plugins/timepicker/js/bootstrap-timepicker.min.js"></script>
+	<script src="/static/assets/plugins/moment/moment.min.js"></script>
+	<script src="/static/assets/plugins/daterangepicker/js/daterangepicker.min.js"></script>
+	<script src="/static/assets/plugins/hotkeys/jquery.hotkeys.min.js"></script>
+	<script src="/static/assets/plugins/wysiwyg/bootstrap-wysiwyg.min.js"></script>
+	<script src="/static/assets/plugins/colorpicker/js/bootstrap-colorpicker.min.js"></script>
+
+	<!-- theme scripts -->
+	<script src="/static/assets/js/SmoothScroll.js"></script>
+	<script src="/static/assets/js/jquery.mmenu.min.js"></script>
+	<script src="/static/assets/js/core.min.js"></script>
+
+	<!-- inline scripts related to this page -->
+	<script src="/static/assets/js/pages/form-elements.js"></script>
+    <script>
+        $('#warningWrong').hide();
+        alert("!!!");
+     <!--  $('#warning').on('blur',function(e){
+            var $this = $(this);
+             if (this.val().indexOf("有") == -1 && this.val().indexOf("否") == -1)
+             {
+                 $('#warningWrong').show();
+                 $('#but').attr('disabled',true);
+             }
+             else
+             {
+                  $('#warningWrong').hide();
+                 $('#but').attr('disabled',false);
+             }
+         });-->
+    </script>
+	<!-- end: JavaScript-->
+
+
+	</head>
+</head>
+
+<body class="">
+<!-- start: Header -->
+	<div class="navbar" role="navigation">
+
+		<div class="container-fluid">
+
+			<ul class="nav navbar-nav navbar-actions navbar-left">
+				<li class="visible-md visible-lg"><a href="/table/" id="main-menu-toggle"><i class="fa fa-th-large"></i></a></li>
+				<li class="visible-xs visible-sm"><a href="/table" id="sidebar-menu"><i class="fa fa-navicon"></i></a></li>
+			</ul>
+
+			<form action="/search_machine/" method="post" class="navbar-form navbar-left">
+				<button type="submit"  class="fa fa-search"></button>
+				<input type="text" name="machinesn" class="form-control" placeholder="Search by SN..."></a>
+			</form>
+
+	        <ul class="nav navbar-nav navbar-right">
+
+                <li><a href="/user_set/"><i class="fa fa-cog"></i></a></li>
+
+				<li class="dropdown visible-md visible-lg">
+	        		<a href="#" class="dropdown-toggle" data-toggle="dropdown"><img class="user-avatar" src="/static/assets/img/avatar.jpg" alt="user-mail">{{ username }}</a>
+	        		<ul class="dropdown-menu">
+						<li class="dropdown-menu-header">
+							<strong>Account</strong>
+						</li>
+						<li><a href="/login/"><i class="fa fa-user"></i> 登录</a></li>
+{#						<li><a href="page-login.html"><i class="fa fa-wrench"></i> </a></li>#}
+{#						<li><a href="page-invoice.html"><i class="fa fa-usd"></i> Payments <span class="label label-default">10</span></a></li>#}
+						<li><a href="/user_set/"><i class="fa fa-cog"></i> 账户管理 </a></li>
+{#						<li class="divider"></li>#}
+						<li><a href="/logout/"><i class="fa fa-sign-out"></i> 注销</a></li>
+	        		</ul>
+	      		</li>
+				<li><a href="/logout/"><i class="fa fa-power-off"></i></a></li>
+			</ul>
+
+		</div>
+
+	</div>
+	<!-- end: Header -->
+<div class="sidebar  mm-menu mm-horizontal mm-offcanvas"><div class="sidebar-collapse mm-panel mm-opened mm-current" id="mm-0">
+					<div class="sidebar-header t-center">
+                        <span><img class="text-logo" src="/static/assets/img/logo1.png"><i class="fa fa-space-shuttle fa-3x blue"></i></span>
+                    </div>
+					<div class="sidebar-menu opened" style="height: 233px;">
+						<ul class="nav nav-sidebar">
+							<li class="active opened"><a href="/"><i class="fa fa-code-fork"></i><span class="text"> 主页</span></a></li>
+							<li>
+								<a href="#"><i class="fa fa-laptop"></i><span class="text"> 我的设备</span> <span class="fa fa-angle-down pull-right"></span></a>
+								<ul class="nav sub">
+                                    <li><a href="/table/"><i class="fa fa-table"></i><span class="text"> 设备管理</span></a></li>
+                                    <li><a href="/warning_history/"><i class="fa fa-bell"></i><span class="text"> 报警历史</span></a></li>
+								</ul>
+							</li>
+                            <li>
+								<a href="#"><i class="fa fa-comment"></i><span class="text"> 通知组</span> <span class="fa fa-angle-down pull-right"></span></a>
+								<ul class="nav sub">
+                                    <li><a href="/developer/"><i class="fa fa-eye"></i><span class="text"> 作者信息</span></a></li>
+								</ul>
+							</li>
+                            <li><a href="/user_set/"><i class="fa fa-cog"></i><span class="text"> 设置</span></a></li>
+
+                            <li><a href="/logout/"><i class="fa fa-power-off"></i><span class="text"> 退出登录</span></a></li>
+
+
+
+
+
+{#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#}
+
+
+
+{#                                                                                                                       以上为我们所用的                  #}
+
+
+
+
+
+                        </ul>
+                    </div>
+
+
+
+
+				</div>
+    <div class="sidebar-footer drop-shadow mm-panel mm-hidden" id="mm-1">
+
+
+
+
+				</div></div>
+
+
+<div class="container-fluid content mm-page" style="min-height: 433px;">
+
+		<div class="row">
+
+			<!-- start: Main Menu -->
+
+			<!-- end: Main Menu -->
+
+		<!-- start: Content -->
+		<div class="main " style="min-height: 516px;">
+
+			<div class="row">
+				<div class="col-lg-12">
+					<h3 class="page-header"><i class="fa fa-indent"></i>设备编辑</h3>
+					<ol class="breadcrumb">
+						<li><i class="fa fa-home"></i><a href="/">Home</a></li>
+						<li><i class="fa fa-list-alt"></i><a href="/table/">设备管理</a></li>
+						<li><i class="fa fa-indent"></i>设备修改</li>
+					</ol>
+				</div>
+			</div>
+
+			<div class="row">
+			    <div class="col-md-12">
+			        <div class="panel panel-default">
+			            <div class="panel-heading">
+			                <h2><i class="fa fa-indent red"></i><strong>添加设备表</strong></h2>
+			            </div>
+						<div class="panel-body">
+							<form action="/update/" method="post" enctype="multipart/form-data" class="form-horizontal ">
+                                {% csrf_token %}
+				                <div class="form-group">
+				                    <label class="col-md-3 control-label __web-inspector-hide-shortcut__"></label>
+                                    <input type="text", id="id" name="id" class="hidden" value="{{ machine.id }}">
+				                    <div class="col-md-9">
+				                        <p class="form-control-/static" style="
+    background-color: rgba(255,255,255,.15);
+">物联网设备添加</p>
+				                    </div>
+				                </div>
+				                <div class="form-group">
+				                    <label class="col-md-3 control-label" for="SN">SN</label>
+				                    <div class="col-md-9">
+				                        <input readonly type="text" id="SN" name="SN" class="form-control" placeholder="SN" value="{{ machine.SN }}">
+				                        <span class="help-block">请输入SN号码</span>
+				                    </div>
+				                </div>
+				                <div class="form-group">
+				                    <label class="col-md-3 control-label" for="name">名称</label>
+				                    <div class="col-md-9">
+				                        <input type="text" id="name" name="name" class="form-control" placeholder="设备名称" value="{{ machine.name }}">
+				                        <span class="help-block">可以以数字代替名称</span>
+				                    </div>
+				                </div>
+				                <div class="form-group">
+				                    <label class="col-md-3 control-label" for="temperature">温度</label>
+				                    <div class="col-md-9">
+				                        <input type="number" id="temperature" name="temperature" class="form-control" placeholder="请输入设备温度" value="{{ machine.temperature }}">
+				                        <span class="help-block">格式： xx.xx℃（xx-xx） </span>
+				                    </div>
+				                </div>
+                                <div class="form-group">
+				                    <label class="col-md-3 control-label" for="limit">阈值</label>
+				                    <div class="col-md-9">
+				                        <input type="number" id="limit" name="limit" class="form-control" placeholder="设备阈值" value="{{ machine.limit }}">
+				                        <span class="help-block">摄氏度</span>
+				                    </div>
+				                </div>
+
+				                <div class="hidden" class="form-group">
+				                    <label class="col-md-3 control-label" for="time">更新时间</label>
+				                    <div class="col-md-9">
+				                        <input type="text" id="time" name="time" class="form-control" placeholder="请输入更新时间" value="{{ machine.time }}">
+				                        <span class="help-block">格式： xxxx/xx/xx xx:xx:xx </span>
+                                         <p id = "timeWrong">格式不正确，格式： xxxx/xx/xx xx:xx:xx</p>
+				                    </div>
+				                </div>
+				                <div class="form-group">
+				                    <label class="col-md-3 control-label" for="warning">报警</label>
+				                    <div class="col-md-9">
+				                        <input type="text" id="warning" name="warning" class="form-control" placeholder="是否报警" value="{{ machine.warning }}">
+				                        <span class="help-block">有/无</span>
+                                         <p id ="warningWrong">输入错误，输入值必须为有或无</p>
+				                    </div>
+				                </div>
+				                <div class="form-group">
+				                    <label class="col-md-3 control-label" for="state">状态</label>
+				                    <div class="col-md-9">
+				                        <select id="state" name="state" class="form-control input-lg" size="1" value="{{ machine.state }}">
+				                            <option value="正常">正常</option>
+				                            <option value="故障">故障</option>
+				                            <option value="暂停">暂停</option>
+				                            <option value="关闭">关闭</option>
+				                        </select>
+				                    </div>
+				                </div>
+
+
+		                         <button type="submit" class="btn btn-sm btn-success center-block" id = "but"><i class="fa fa-dot-circle-o"></i> Submit</button>
+	                             <button type="reset" class="btn btn-sm btn-danger center-block"><i class="fa fa-ban"></i> Reset</button>
+				            </form>
+
+			            </div>
+                        <div>
+                             <div class="panel-footer"></div>
+                        </div>
+
+			    <!--/.col-->
+			</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		</div>
+		<!-- end: Content -->
+		<br><br><br>
+
+
+
+
+	</div><!--/container-->
+
+
+	<div class="modal fade" id="myModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<h4 class="modal-title">Modal title</h4>
+				</div>
+				<div class="modal-body">
+					<p>Here settings can be configured...</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary">Save changes</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
+	<div class="clearfix"></div>
+
+
+
+    </div></div><div id="mm-blocker"></div></div>
+	<!-- start: Header -->
+
+	<!-- end: Header -->
+
+
+
+
+
+
+<div id="mm-blocker"></div>
+</body>
+</html>
